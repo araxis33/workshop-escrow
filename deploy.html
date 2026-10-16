@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deploy Workshop Escrow to Arc Mainnet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      :root{
+        --bg:#ffffff;
+        --bg-gradient:linear-gradient(180deg,#f9f9fc 0%,#fffcf7 52%,#fbf7f2 100%);
+        --surface:rgba(255,255,255,0.72);
+        --surface-strong:rgba(255,255,255,0.90);
+        --surface-muted:#f5f5f8;
+        --ink:#122d45;
+        --ink-2:#334155;
+        --muted:#6b6580;
+        --subtle:#8a849c;
+        --border:rgba(18,45,69,0.12);
+        --border-strong:rgba(25,53,77,0.50);
+        --accent:#122d45;
+        --accent-hover:#1061a6;
+        --success:#1a8047;
+        --danger:#ba2b4c;
+      }
+      body{
+        font-family:'DM Sans',sans-serif;
+        min-height:100dvh;
+        background:var(--bg-gradient);
+        display:flex;
+        align-items:flex-start;
+        justify-content:center;
+        padding:32px 16px 64px;
+      }
+      .card{
+        width:100%;
+        max-width:480px;
+        border-radius:24px;
+        padding:28px;
+        background:var(--surface-strong);
+        border:1px solid var(--border);
+        backdrop-filter:blur(20px);
+        box-shadow:0 4px 24px rgba(18,45,69,0.06);
+      }
+      .logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+      .logo-icon{
+        width:36px;height:36px;border-radius:10px;
+        background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      }
+      .logo-icon svg{fill:white;}
+      h1{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;letter-spacing:-0.02em;color:var(--ink);}
+      .sub{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+      .btn{
+        width:100%;border:none;border-radius:14px;padding:14px;cursor:pointer;
+        font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:600;
+        transition:transform .12s,opacity .12s;
+      }
+      .btn:hover:not(:disabled){transform:scale(1.01);}
+      .btn:active:not(:disabled){transform:scale(0.99);}
+      .btn:disabled{opacity:.45;cursor:not-allowed;}
+      .btn-primary{background:var(--accent);color:#fff;}
+      .btn-secondary{background:var(--surface-muted);color:var(--ink);}
+      .btn-danger{background:var(--danger);color:#fff;}
+      .section{margin-top:18px;}
+      .label{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--subtle);margin-bottom:5px;}
+      .info-row{
+        border-radius:12px;padding:10px 14px;
+        background:var(--surface-muted);
+        font-size:0.75rem;color:var(--ink-2);
+        word-break:break-all;
+        font-family:'JetBrains Mono',Menlo,monospace;
+      }
+      .status{border-radius:12px;padding:10px 14px;font-size:0.75rem;margin-top:14px;}
+      .status.idle{display:none;}
+      .status.info{background:rgba(18,45,69,0.05);color:var(--ink-2);}
+      .status.success{background:rgba(26,128,71,0.08);color:var(--success);}
+      .status.error{background:rgba(186,43,76,0.08);color:var(--danger);}
+      .spinner{
+        display:inline-block;width:13px;height:13px;border:2px solid currentColor;
+        border-right-color:transparent;border-radius:50%;
+        animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;
+      }
+      @keyframes spin{to{transform:rotate(360deg)}}
+      .address-box{
+        border-radius:14px;padding:14px;margin-top:14px;
+        background:rgba(26,128,71,0.07);border:1px solid rgba(26,128,71,0.18);
+      }
+      .address-box .big{
+        font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;
+        color:var(--success);letter-spacing:-0.02em;word-break:break-all;
+      }
+      .address-box a{
+        display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;
+        color:var(--success);text-decoration:none;margin-top:6px;
+      }
+      .address-box a:hover{text-decoration:underline;}
+      .paste-box{
+        border-radius:12px;padding:12px 14px;margin-top:14px;
+        background:var(--surface-muted);border:1px solid var(--border);
+      }
+      .paste-box pre{
+        font-family:'JetBrains Mono',Menlo,monospace;font-size:0.75rem;
+        color:var(--ink-2);white-space:pre-wrap;word-break:break-all;
+      }
+      .match{font-size:0.75rem;margin-top:10px;padding:8px 12px;border-radius:10px;}
+      .match.ok{background:rgba(26,128,71,0.07);color:var(--success);}
+      .match.bad{background:rgba(186,43,76,0.07);color:var(--danger);}
+      .divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+      .step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+      .step-num{
+        flex-shrink:0;width:22px;height:22px;border-radius:50%;
+        background:rgba(18,45,69,0.08);display:flex;align-items:center;
+        justify-content:center;font-size:0.65rem;font-weight:700;color:var(--accent);
+      }
+      .step p{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+    </style>
+    <script type="module" crossorigin src="./assets/deploy-C23BfGW_.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/WorkshopEscrow-D2jnwXUj.js">
+  </head>
+  <body>
+    <div class="card">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="16" height="18" viewBox="0 0 20 22" xmlns="http://www.w3.org/2000/svg"><path d="M0 21.5C.167 16.237 1.023 11.324 2.454 7.505 4.266 2.665 6.889 0 9.839 0c2.95 0 5.573 2.665 7.385 7.505.943 2.517 1.636 5.507 2.047 8.76.037.291.068.586.1.881.01.018.016.035.014.049 0 0 .242 1.572.293 4.305h-.027c-.358-.306-4.582-3.767-11.584-2.765.106-1.235.251-2.437.439-3.59.01-.058.02-.115.03-.174 2.746-.086 5.15.246 6.993.682-.007-.046-.013-.093-.02-.138-.38-2.46-.938-4.712-1.659-6.637C13.173 5.73 11.635 3.775 10.339 3.775c-1.297 0-2.834 1.955-4.013 5.102-.285.761-.545 1.573-.777 2.429-.328 1.2-.603 2.487-.823 3.839C4.4 17.141 4.197 19.282 4.122 21.5H0z"/></svg>
+        </div>
+        <div>
+          <h1>Deploy Workshop Escrow</h1>
+          <p class="sub">Arc Mainnet (Chain ID 5042)</p>
+        </div>
+      </div>
+
+      <!-- Steps overview -->
+      <div class="section">
+        <div class="step"><div class="step-num">1</div><p>Connect your wallet (Rabby, MetaMask, or any injected wallet).</p></div>
+        <div class="step"><div class="step-num">2</div><p>Switch to Arc Mainnet — the button below handles it automatically.</p></div>
+        <div class="step"><div class="step-num">3</div><p>Click Deploy. The page sends the contract creation transaction with gas priced above Arc's 20 gwei floor.</p></div>
+        <div class="step"><div class="step-num">4</div><p>Copy the resulting address into <code style="font-family:JetBrains Mono,monospace;font-size:0.75rem">src/config.ts</code>.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Wallet section -->
+      <div class="section">
+        <div class="label">Wallet</div>
+        <div class="info-row" id="wallet-display" style="font-family:'DM Sans',sans-serif;color:var(--subtle)">Not connected</div>
+      </div>
+
+      <!-- Network section -->
+      <div class="section" id="network-section" style="display:none">
+        <div class="label">Network</div>
+        <div class="info-row" id="network-display">—</div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="section" style="display:flex;flex-direction:column;gap:10px;" id="action-area">
+        <button class="btn btn-primary" id="btn-connect">Connect wallet</button>
+        <button class="btn btn-secondary" id="btn-switch" style="display:none">Switch to Arc Mainnet</button>
+        <button class="btn btn-primary" id="btn-deploy" style="display:none" disabled>Deploy</button>
+      </div>
+
+      <!-- Status -->
+      <div class="status idle" id="status"></div>
+
+      <!-- Result -->
+      <div id="result" style="display:none">
+        <div class="address-box">
+          <div class="label" style="color:var(--success)">Deployed at</div>
+          <div class="big" id="result-address"></div>
+          <a id="result-explorer" href="#" target="_blank" rel="noreferrer">
+            View on explorer
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+        <div class="match" id="code-match"></div>
+        <div class="paste-box">
+          <div class="label" style="margin-bottom:6px">Paste into src/config.ts</div>
+          <pre id="paste-line"></pre>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
