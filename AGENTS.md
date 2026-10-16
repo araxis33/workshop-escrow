@@ -23,6 +23,13 @@ A two-party USDC escrow for custom work (furniture, craft, bespoke orders):
 
 Deploy tx: `0x898fb42d980163d04f69574b47420c6d55e7d22c5427990d13efc0307818a2e9`
 
+## Arc Mainnet proof (16.10.2026)
+
+- Deploy: `0x2550ddbc46e110d7d20c4f1faf843ba61ec23ecbc850d748876e7f2eabacfe3a` (block 26266240), runtime code equal to `contracts/out` byte for byte
+- createOrder, 1 USDC locked: `0x709a3a72d5abc703f63c77b723ed5190adf6658ca9807c11d16047c25df4ccce`
+- release, 1 USDC paid to the maker: `0xc6d24e6495594e9964473f187d448165597c9781cc6ce8ace616f7720e5dc6d3`
+- Live app: https://araxis33.github.io/workshop-escrow/
+
 ## Tech Stack
 
 - Frontend: React 18, Vite, TypeScript, Tailwind CSS, Arc Light design
