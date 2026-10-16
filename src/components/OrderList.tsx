@@ -66,7 +66,7 @@ export function OrderList({ network, role, onAction }: Props) {
   }
 
   const orders = ordersData
-    ?.map((r, i) => r.status === 'success' && r.result ? parseOrder(r.result as readonly [string, string, bigint, bigint, bigint, number, string], orderedIds[i]) : null)
+    ?.map((r, i) => r.status === 'success' && r.result ? parseOrder(r.result as Parameters<typeof parseOrder>[0], orderedIds[i]) : null)
     .filter(Boolean)
 
   if (!orders?.length) {
