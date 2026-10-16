@@ -72,7 +72,7 @@ export const NETWORKS: Record<string, NetworkConfig> = {
     rpc: 'https://rpc.mainnet.arc.io',
     explorer: 'https://explorer.arc.io',
     usdcAddress: '0x3600000000000000000000000000000000000000',
-    escrowAddress: '', // TODO: fill in after mainnet deploy
+    escrowAddress: '0xf999268ef7e91cc767f4f6752eea38841d3f9a43',
     isTestnet: false,
   },
 }

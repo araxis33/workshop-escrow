@@ -19,7 +19,7 @@ A two-party USDC escrow for custom work (furniture, craft, bespoke orders):
 | Network | Address | Explorer |
 |---|---|---|
 | Arc Testnet | `0xf65746ad0acab166f125c2e2bc2d93784e6b1d43` | https://explorer.testnet.arc.io/address/0xf65746ad0acab166f125c2e2bc2d93784e6b1d43 |
-| Arc Mainnet | (not deployed — fill in `config.ts` after mainnet deploy) | — |
+| Arc Mainnet | `0xf999268ef7e91cc767f4f6752eea38841d3f9a43` | https://explorer.arc.io/address/0xf999268ef7e91cc767f4f6752eea38841d3f9a43 |
 
 Deploy tx: `0x898fb42d980163d04f69574b47420c6d55e7d22c5427990d13efc0307818a2e9`
 
